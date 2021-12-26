@@ -1,0 +1,53 @@
+import 'dart:developer';
+
+import 'package:coflow_app/models/user_model.dart';
+import 'package:coflow_app/services/database_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+class AuthService {
+  final instance = FirebaseAuth.instance;
+  UserModel? _userFromFirebase(User? user) {
+    return user != null ? UserModel(uid: user.uid, email: user.email) : null;
+  }
+
+  Future<dynamic> signUp({String? email, String? password}) async {
+    try {
+      UserCredential credential = await instance.createUserWithEmailAndPassword(
+          email: email!, password: password!);
+      User? user = credential.user;
+      await DatabaseService(uid: user!.uid).updateUserData(email);
+      return _userFromFirebase(user);
+    } on FirebaseAuthException catch (e) {
+      return e.code;
+    }
+  }
+
+  Future<dynamic> logIn({String? email, String? password}) async {
+    try {
+      UserCredential credential = await instance.signInWithEmailAndPassword(
+          email: email!, password: password!);
+      User? user = credential.user;
+      // return user;
+      return _userFromFirebase(user);
+    } on FirebaseAuthException catch (e) {
+      return e.code;
+    }
+  }
+
+  Future loginAnonymously() async {
+    try {
+      var response = await instance.signInAnonymously();
+      log("$response");
+    } on FirebaseAuthException catch (e) {
+      return e.code;
+    }
+  }
+
+  Future logOut() async {
+    try {
+      await instance.signOut();
+    } on FirebaseAuthException catch (e) {
+      return e.code;
+    }
+  }
+}
