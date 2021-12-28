@@ -13,33 +13,20 @@ class CartTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      onLongPress: () => showDialog(
+        context: context,
+        builder: (context) => buildRemoveItemDialog(context),
+      ),
       contentPadding: context.paddingNormalVertical,
-      leading: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          IconButton(
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (context) => buildRemoveItemDialog(context),
-                );
-              },
-              iconSize: 15,
-              icon: Icon(
-                Icons.clear,
-                color: context.colors.error,
-              )),
-          SizedBox(
-            height: 50,
-            width: 50,
-            child: FittedBox(
-              fit: BoxFit.cover,
-              child: ClipRRect(
-                  borderRadius: BorderRadius.circular(context.highValue),
-                  child: Image.network("${product.img}")),
-            ),
-          ),
-        ],
+      leading: SizedBox(
+        height: 50,
+        width: 50,
+        child: FittedBox(
+          fit: BoxFit.cover,
+          child: ClipRRect(
+              borderRadius: BorderRadius.circular(context.highValue),
+              child: Image.network("${product.img}")),
+        ),
       ),
       title: Text("${product.name}"),
       trailing: Row(
