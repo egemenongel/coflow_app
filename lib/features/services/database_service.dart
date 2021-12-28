@@ -33,14 +33,23 @@ class DatabaseService {
   }
 
   Future addToCart(ProductModel product) async {
-    userCartReference.update(
-      {
-        "productList": FieldValue.arrayUnion([
-          product.toJson(),
-        ]),
-      },
-    );
-    updateSum();
+    DocumentSnapshot list = await userCartReference.get();
+    List arr = list.get("productList");
+    var codes = arr.map((e) => e["productCode"]);
+    Map<String, dynamic> productJson = product.toJson();
+
+    if (codes.contains(productJson["productCode"])) {
+    } else {
+      userCartReference.update(
+        {
+          "productList": FieldValue.arrayUnion(
+            [
+              product.toJson(),
+            ],
+          ),
+        },
+      );
+    }
   }
 
   Future updateSum() async {
@@ -53,13 +62,6 @@ class DatabaseService {
     userCartReference.update({
       "sum": sum,
     });
-  }
-
-  Future getSum() async {
-    DocumentSnapshot list = await userCartReference.get();
-    var map = await list.get("productList") as Map<String, dynamic>;
-    var a = map["sum"];
-    return a;
   }
 
   Future increment(ProductModel product) async {
