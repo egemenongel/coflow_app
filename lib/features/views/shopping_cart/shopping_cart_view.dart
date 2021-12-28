@@ -1,5 +1,5 @@
-import '../../../core/components/buttons/custom_elevated_button.dart';
-import '../../../core/components/cart_tile/cart_tile.dart';
+import 'package:coflow_app/core/components/buttons/custom_elevated_button.dart';
+import 'package:coflow_app/core/components/cart_tile/cart_tile.dart';
 
 import '../../services/database_service.dart';
 
@@ -25,6 +25,7 @@ class ShoppingCartView extends StatelessWidget {
         Map<String, dynamic> data =
             snapshot.data!.data() as Map<String, dynamic>;
         List productList = data["productList"] ?? [];
+        databaseService.updateSum();
         return Padding(
           padding: context.paddingMedium,
           child: Column(
@@ -46,7 +47,7 @@ class ShoppingCartView extends StatelessWidget {
                 // Text("total:${data["sum"] ?? ""}"),
               ],
               if (productList.isEmpty) ...[
-                const SizedBox()
+                SizedBox()
               ] else ...[
                 Expanded(child: buildTotal(context, data)),
                 const Spacer(),
