@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 
 import 'controllers/auth_toggle.dart';
 import 'controllers/form_controller.dart';
-import 'controllers/product_controller.dart';
 import 'services/auth_service.dart';
 import 'views/initial_view/initial_view.dart';
 
@@ -14,9 +13,6 @@ void main() {
     providers: [
       ChangeNotifierProvider(
         create: (_) => AuthToggle(),
-      ),
-      ChangeNotifierProvider(
-        create: (_) => ProductController(),
       ),
       ChangeNotifierProvider(
         create: (_) => FormController(),

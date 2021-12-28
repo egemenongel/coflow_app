@@ -10,19 +10,17 @@ class ProductDetailView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              flex: 4,
-              child: buildProductCard(),
-            ),
-            Expanded(
-              flex: 1,
-              child: buildAddToCartButton(context),
-            ),
-          ],
-        ),
+      body: Column(
+        children: [
+          Expanded(
+            flex: 4,
+            child: buildProductCard(),
+          ),
+          Expanded(
+            flex: 1,
+            child: buildAddToCartButton(context),
+          ),
+        ],
       ),
     );
   }
@@ -77,7 +75,8 @@ class ProductDetailView extends StatelessWidget {
               ],
             ),
             onPressed: () {
-              databaseService.addToCart(productModel.toJson());
+              databaseService.addToCart(productModel);
+              // databaseService.addToCart(productModel.toJson());
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                 content: Text("Added to cart"),
               ));

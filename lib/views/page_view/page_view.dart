@@ -40,7 +40,7 @@ class _CustomPageViewState extends State<CustomPageView> {
   Widget build(BuildContext context) {
     List<Widget> _views = [
       HomeView(),
-      const ShoppingCartView(),
+      ShoppingCartView(),
       ProfileView(),
     ];
 

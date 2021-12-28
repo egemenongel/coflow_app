@@ -1,12 +1,12 @@
-import '../../controllers/product_controller.dart';
+import 'package:coflow_app/services/database_service.dart';
+
 import '../../models/product_model.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class ProductTile extends StatefulWidget {
-  const ProductTile({Key? key, required this.myProduct}) : super(key: key);
+  ProductTile({Key? key, required this.myProduct}) : super(key: key);
   final dynamic myProduct;
-
+  final databaseService = DatabaseService();
   @override
   State<ProductTile> createState() => _ProductTileState();
 }
@@ -37,25 +37,22 @@ class _ProductTileState extends State<ProductTile>
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          IconButton(
-            icon: const Icon(
-              Icons.remove,
-              size: 15,
-            ),
-            splashRadius: 17,
-            onPressed: () =>
-                context.read<ProductController>().decrement(productModel),
-          ),
-          Consumer<ProductController>(builder: (_, _productController, ___) {
-            return Text("${productModel.count}");
-          }),
+          // IconButton(
+          //   icon: const Icon(
+          //     Icons.remove,
+          //     size: 15,
+          //   ),
+          //   splashRadius: 17,
+          //   onPressed: () =>
+          //       context.read<ProductController>().decrement(productModel),
+          // ),
+          Text("${productModel.count}"),
           // Consumer<ProductController>(
           //     builder: (_, __, ___) => Text("${__.count}")),
           IconButton(
             icon: const Icon(Icons.add, size: 15, color: Color(0xffFE2C21)),
             splashRadius: 17,
-            onPressed: () =>
-                context.read<ProductController>().increment(productModel),
+            onPressed: () => widget.databaseService.increment(productModel),
           ),
           // Container(
           //   decoration: const BoxDecoration(

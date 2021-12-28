@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthService {
   final instance = FirebaseAuth.instance;
+  Stream<User?> get authStateChanges => instance.authStateChanges();
   UserModel? _userFromFirebase(User? user) {
     return user != null ? UserModel(uid: user.uid, email: user.email) : null;
   }
@@ -36,8 +37,9 @@ class AuthService {
 
   Future loginAnonymously() async {
     try {
-      var response = await instance.signInAnonymously();
-      log("$response");
+      await DatabaseService(uid: instance.currentUser!.uid)
+          .updateUserData("guest");
+      return _userFromFirebase(instance.currentUser);
     } on FirebaseAuthException catch (e) {
       return e.code;
     }
