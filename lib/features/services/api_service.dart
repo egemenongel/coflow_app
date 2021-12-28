@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:http/http.dart' as http;
 
@@ -21,7 +22,7 @@ class ApiService {
         log("${response.statusCode}");
       }
     } catch (e) {
-      log("$e");
+      throw HttpException("$e");
     }
   }
 }

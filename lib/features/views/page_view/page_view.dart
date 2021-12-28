@@ -51,10 +51,6 @@ class _CustomPageViewState extends State<CustomPageView> {
             physics: const NeverScrollableScrollPhysics(),
           ),
         ),
-        //  IndexedStack(
-        //   children: _views,
-        //   index: _selectedIndex,
-        // ),
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _selectedIndex,
           onTap: _onItemTapped,

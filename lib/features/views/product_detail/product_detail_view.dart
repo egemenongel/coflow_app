@@ -77,30 +77,6 @@ class ProductDetailView extends StatelessWidget {
                 ));
               },
             ),
-            //     ElevatedButton(
-            //   child: Row(
-            //     mainAxisAlignment: MainAxisAlignment.center,
-            //     children: const [
-            //       Icon(
-            //         Icons.add_shopping_cart,
-            //       ),
-            //       Spacer(),
-            //       Text("Add to Cart"),
-            //       Spacer(),
-            //     ],
-            //   ),
-            //   onPressed: () {
-            //     databaseService.addToCart(productModel);
-            //     // databaseService.addToCart(productModel.toJson());
-            //     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            //       content: Text("Added to cart"),
-            //     ));
-            //   },
-            //   style: ElevatedButton.styleFrom(
-            //       padding: const EdgeInsets.all(14),
-            //       shape: RoundedRectangleBorder(
-            //           borderRadius: BorderRadius.circular(15))),
-            // )
           )
         ],
       ),

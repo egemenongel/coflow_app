@@ -17,29 +17,7 @@ class CartTile extends StatelessWidget {
       onLongPress: () {
         showDialog(
           context: context,
-          builder: (context) => SimpleDialog(
-            title: const Center(
-              child: Text("Remove this item from your cart?"),
-            ),
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton(
-                      onPressed: () {
-                        databaseService.removeProduct(product);
-                        Navigator.pop(context);
-                      },
-                      child: const Text("Yes")),
-                  TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text("No"))
-                ],
-              )
-            ],
-          ),
+          builder: (context) => buildRemoveItemDialog(context),
         );
       },
       leading: SizedBox(
@@ -90,6 +68,32 @@ class CartTile extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  SimpleDialog buildRemoveItemDialog(BuildContext context) {
+    return SimpleDialog(
+      title: const Center(
+        child: Text("Remove this item from your cart?"),
+      ),
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            TextButton(
+                onPressed: () {
+                  databaseService.removeProduct(product);
+                  Navigator.pop(context);
+                },
+                child: const Text("Yes")),
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text("No"))
+          ],
+        )
+      ],
     );
   }
 }

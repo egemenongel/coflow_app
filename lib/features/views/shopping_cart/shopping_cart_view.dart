@@ -1,4 +1,4 @@
-import 'package:coflow_app/core/components/product_tile/product_tile.dart';
+import 'package:coflow_app/core/components/cart_tile/cart_tile.dart';
 
 import '../../services/database_service.dart';
 
@@ -73,85 +73,6 @@ class ShoppingCartView extends StatelessWidget {
       itemBuilder: (BuildContext context, int index) {
         var product = ProductModel.fromJson(productList[index]);
         return CartTile(product: product);
-        //  ListTile(
-        //   contentPadding: context.paddingNormalVertical,
-        //   onLongPress: () {
-        //     showDialog(
-        //       context: context,
-        //       builder: (context) => SimpleDialog(
-        //         title: const Center(
-        //           child: Text("Remove this item from your cart?"),
-        //         ),
-        //         children: [
-        //           Row(
-        //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //             children: [
-        //               TextButton(
-        //                   onPressed: () {
-        //                     databaseService.removeProduct(product);
-        //                     Navigator.pop(context);
-        //                   },
-        //                   child: const Text("Yes")),
-        //               TextButton(
-        //                   onPressed: () {
-        //                     Navigator.pop(context);
-        //                   },
-        //                   child: const Text("No"))
-        //             ],
-        //           )
-        //         ],
-        //       ),
-        //     );
-        //   },
-        //   leading: SizedBox(
-        //     height: 50,
-        //     width: 50,
-        //     child: FittedBox(
-        //       fit: BoxFit.cover,
-        //       child: ClipRRect(
-        //           borderRadius: BorderRadius.circular(context.highValue),
-        //           child: Image.network("${product.img}")),
-        //     ),
-        //   ),
-        //   title: Text("${product.name}"),
-        //   trailing: Row(
-        //     mainAxisSize: MainAxisSize.min,
-        //     children: [
-        //       IconButton(
-        //         icon: const Icon(
-        //           Icons.remove,
-        //           size: 15,
-        //         ),
-        //         splashRadius: 17,
-        //         onPressed: () {
-        //           databaseService.decrement(product);
-        //         },
-        //       ),
-        //       Text("${product.count}"),
-        //       IconButton(
-        //         icon: Icon(Icons.add, size: 15, color: context.colors.primary),
-        //         splashRadius: 17,
-        //         onPressed: () {
-        //           databaseService.increment(product);
-        //         },
-        //       ),
-        //     ],
-        //   ),
-        //   subtitle: Column(
-        //     mainAxisSize: MainAxisSize.max,
-        //     crossAxisAlignment: CrossAxisAlignment.start,
-        //     children: [
-        //       Text(
-        //         "${product.code}",
-        //       ),
-        //       Text(
-        //         "${product.price} \$",
-        //         style: context.textTheme.bodyText1!
-        //             .copyWith(color: context.colors.primary),
-        //       ),
-        //     ],
-        //   ),
-        // );
       },
     );
   }
