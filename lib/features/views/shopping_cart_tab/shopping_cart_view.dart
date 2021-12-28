@@ -2,6 +2,7 @@ import '../../services/database_service.dart';
 
 import '../../models/product_model.dart';
 import 'package:flutter/material.dart';
+import 'package:coflow_app/core/extension/context_extension.dart';
 
 class ShoppingCartView extends StatelessWidget {
   ShoppingCartView({Key? key}) : super(key: key);
@@ -22,116 +23,13 @@ class ShoppingCartView extends StatelessWidget {
             snapshot.data!.data() as Map<String, dynamic>;
         List productList = data["productList"] ?? [];
         return Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: context.paddingMedium,
           child: Column(
             children: [
               if (productList.isEmpty)
-                ...buildEmptyCart
-              else ...[
-                const Expanded(
-                  flex: 1,
-                  child: FittedBox(
-                    child: Text(
-                      "Cart",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  flex: 18,
-                  child: ListView.builder(
-                    itemCount: productList.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      var product = ProductModel.fromJson(productList[index]);
-                      return ListTile(
-                        contentPadding: const EdgeInsets.symmetric(
-                          vertical: 10,
-                        ),
-                        onLongPress: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) => SimpleDialog(
-                              title: const Center(
-                                child: Text("Remove this item from your cart?"),
-                              ),
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    TextButton(
-                                        onPressed: () {
-                                          databaseService
-                                              .removeProduct(product);
-                                          Navigator.pop(context);
-                                        },
-                                        child: const Text("Yes")),
-                                    TextButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        child: const Text("No"))
-                                  ],
-                                )
-                              ],
-                            ),
-                          );
-                        },
-                        leading: SizedBox(
-                          height: 50,
-                          width: 50,
-                          child: FittedBox(
-                            fit: BoxFit.cover,
-                            child: ClipRRect(
-                                borderRadius: BorderRadius.circular(50),
-                                child: Image.network("${product.img}")),
-                          ),
-                        ),
-                        title: Text("${product.name}"),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              icon: const Icon(
-                                Icons.remove,
-                                size: 15,
-                              ),
-                              splashRadius: 17,
-                              onPressed: () {
-                                databaseService.decrement(product);
-                              },
-                            ),
-                            Text("${product.count}"),
-                            IconButton(
-                              icon: const Icon(Icons.add,
-                                  size: 15, color: Color(0xffFE2C21)),
-                              splashRadius: 17,
-                              onPressed: () {
-                                databaseService.increment(product);
-                              },
-                            ),
-                          ],
-                        ),
-                        subtitle: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "${product.code}",
-                            ),
-                            Text(
-                              "${product.price} \$",
-                              style: const TextStyle(color: Color(0xffFE2C21)),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
+                ...buildEmptyCart(context)
+              else
+                ...buildCart(context, productList),
               productList.isEmpty
                   ? const SizedBox()
                   : Expanded(flex: 2, child: buildTotalInfo(context, data)),
@@ -142,78 +40,110 @@ class ShoppingCartView extends StatelessWidget {
     );
   }
 
-  Padding buildCart(AsyncSnapshot<dynamic> snapshot) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 0),
-      child: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.all(20),
-              itemCount: snapshot.data.docs.length,
-              itemBuilder: (BuildContext context, int index) {
-                Map<String, dynamic> data =
-                    snapshot.data.data() as Map<String, dynamic>;
-                List productList = data["productList"] ?? [];
-                var product = ProductModel.fromJson(productList[index]);
-
-                return ListTile(
-                  contentPadding: const EdgeInsets.all(20),
-                  leading: SizedBox(
-                    height: 50,
-                    width: 50,
-                    child: FittedBox(
-                      fit: BoxFit.fill,
-                      child: ClipRRect(
-                          borderRadius: BorderRadius.circular(50),
-                          child: Image.network("${product.img}")),
+  List<Widget> buildCart(BuildContext context, List productList) {
+    return [
+      Expanded(
+        flex: 1,
+        child: FittedBox(
+          child: Text(
+            "Cart",
+            style: context.textTheme.headline6,
+          ),
+        ),
+      ),
+      const Spacer(
+        flex: 1,
+      ),
+      Expanded(
+        flex: 18,
+        child: ListView.builder(
+          itemCount: productList.length,
+          itemBuilder: (BuildContext context, int index) {
+            var product = ProductModel.fromJson(productList[index]);
+            return ListTile(
+              contentPadding: context.paddingNormalVertical,
+              onLongPress: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => SimpleDialog(
+                    title: const Center(
+                      child: Text("Remove this item from your cart?"),
                     ),
-                  ),
-                  title: Text("${product.name}"),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      IconButton(
-                        icon: const Icon(
-                          Icons.remove,
-                          size: 15,
-                        ),
-                        splashRadius: 17,
-                        onPressed: () {
-                          databaseService.decrement(product);
-                        },
-                      ),
-                      Text("${product.count}"),
-                      IconButton(
-                        icon: const Icon(Icons.add,
-                            size: 15, color: Color(0xffFE2C21)),
-                        splashRadius: 17,
-                        onPressed: () {
-                          databaseService.increment(product);
-                        },
-                      ),
-                    ],
-                  ),
-                  subtitle: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "${product.code}",
-                      ),
-                      Text(
-                        "${product.price} \$",
-                        style: const TextStyle(color: Color(0xffFE2C21)),
-                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          TextButton(
+                              onPressed: () {
+                                databaseService.removeProduct(product);
+                                Navigator.pop(context);
+                              },
+                              child: const Text("Yes")),
+                          TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text("No"))
+                        ],
+                      )
                     ],
                   ),
                 );
               },
-            ),
-          )
-        ],
+              leading: SizedBox(
+                height: 50,
+                width: 50,
+                child: FittedBox(
+                  fit: BoxFit.cover,
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(context.highValue),
+                      child: Image.network("${product.img}")),
+                ),
+              ),
+              title: Text("${product.name}"),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: const Icon(
+                      Icons.remove,
+                      size: 15,
+                    ),
+                    splashRadius: 17,
+                    onPressed: () {
+                      databaseService.decrement(product);
+                    },
+                  ),
+                  Text("${product.count}"),
+                  IconButton(
+                    icon: Icon(Icons.add,
+                        size: 15, color: context.colors.primary),
+                    splashRadius: 17,
+                    onPressed: () {
+                      databaseService.increment(product);
+                    },
+                  ),
+                ],
+              ),
+              subtitle: Column(
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "${product.code}",
+                  ),
+                  Text(
+                    "${product.price} \$",
+                    style: context.textTheme.bodyText1!
+                        .copyWith(color: context.colors.primary),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
       ),
-    );
+    ];
   }
 
   buildDialog(BuildContext context, List productList) {
@@ -244,27 +174,29 @@ class ShoppingCartView extends StatelessWidget {
     );
   }
 
-  List<Widget> get buildEmptyCart {
+  List<Widget> buildEmptyCart(BuildContext context) {
     return [
       const Spacer(
         flex: 8,
       ),
       Expanded(flex: 8, child: Image.asset("assets/shopping-cart.png")),
-      const Expanded(
+      Expanded(
         flex: 4,
         child: FittedBox(
-          child: Text("Empty Cart"),
+          child: Text(
+            "Empty Cart",
+            style: context.textTheme.bodyText2,
+          ),
         ),
       ),
-      const Expanded(
+      Expanded(
         flex: 8,
         child: FittedBox(
           alignment: Alignment.center,
           child: Text(
             "Your cart is still empty, browse the catalogue",
-            style: TextStyle(
-              color: Colors.grey,
-            ),
+            style: context.textTheme.bodyText1!
+                .copyWith(color: context.colors.onBackground),
           ),
         ),
       )
@@ -295,9 +227,8 @@ class ShoppingCartView extends StatelessWidget {
           flex: 1,
           child: Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.red,
-              ),
+                  borderRadius: BorderRadius.circular(context.lowValue),
+                  color: context.colors.error),
               child: FittedBox(
                 child: IconButton(
                     onPressed: () {

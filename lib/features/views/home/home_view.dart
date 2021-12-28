@@ -3,6 +3,7 @@ import '../../services/auth_service.dart';
 import '../../services/database_service.dart';
 import '../product_detail/product_detail_view.dart';
 import 'package:flutter/material.dart';
+import 'package:coflow_app/core/extension/context_extension.dart';
 
 class HomeView extends StatelessWidget {
   HomeView({Key? key}) : super(key: key);
@@ -27,7 +28,7 @@ class HomeView extends StatelessWidget {
               }
               return Expanded(
                   child: GridView.builder(
-                padding: const EdgeInsets.all(10),
+                padding: EdgeInsets.all(context.lowValue),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                 ),
@@ -58,7 +59,7 @@ class HomeView extends StatelessWidget {
                     )));
       },
       child: Card(
-        color: Colors.transparent,
+        color: context.colors.background,
         elevation: 0,
         child: Column(
           children: [
@@ -67,14 +68,14 @@ class HomeView extends StatelessWidget {
               children: [
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.all(5.0),
+                    padding: context.paddingLowHorizontal,
                     child: ClipRRect(
                       child: Image.network(
                         "${productModel.img}",
                         fit: BoxFit.fitWidth,
                       ),
                       borderRadius: BorderRadius.circular(
-                        20,
+                        context.normalValue,
                       ),
                     ),
                   ),
@@ -84,7 +85,8 @@ class HomeView extends StatelessWidget {
             Text(productModel.name!),
             Text(
               "${productModel.price!} \$",
-              style: const TextStyle(color: Color(0xffFE2C21)),
+              style: context.textTheme.bodyText1!
+                  .copyWith(color: context.colors.primary),
             ),
           ],
         ),

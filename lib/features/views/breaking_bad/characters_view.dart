@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../services/api_service.dart';
+import 'package:coflow_app/core/extension/context_extension.dart';
 
 class CharactersView extends StatefulWidget {
   const CharactersView({Key? key}) : super(key: key);
@@ -29,7 +30,7 @@ class _CharactersViewState extends State<CharactersView> {
               itemCount: snapshot.data.length,
               itemBuilder: (BuildContext context, int index) {
                 var character = snapshot.data[index];
-                return buildCharacterCard(character);
+                return buildCharacterCard(context, character);
               },
             );
           } else if (snapshot.hasError) {
@@ -44,18 +45,35 @@ class _CharactersViewState extends State<CharactersView> {
     );
   }
 
-  Column buildCharacterCard(character) {
+  Column buildCharacterCard(BuildContext context, character) {
     return Column(
       children: [
         ClipRRect(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(context.lowValue),
           child: Image.network(
             "${character.img}",
           ),
         ),
         ListTile(
-          title: Center(child: Text("${character.name}")),
-          subtitle: Center(child: Text("Birthday: ${character.birthday}")),
+          contentPadding: context.paddingLow,
+          title: Center(
+              child: Text(
+            "${character.name}",
+            style: context.textTheme.headline5,
+          )),
+          subtitle: Center(
+            child: RichText(
+                text: TextSpan(
+                    style: context.textTheme.bodyText1!
+                        .copyWith(color: context.colors.primary),
+                    children: [
+                  const TextSpan(text: "Birthday:  "),
+                  TextSpan(
+                    text: "${character.birthday}",
+                    style: context.textTheme.bodyText2,
+                  ),
+                ])),
+          ),
         ),
       ],
     );

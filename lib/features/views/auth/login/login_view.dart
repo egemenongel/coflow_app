@@ -1,4 +1,5 @@
 import '../../../../core/components/buttons/custom_elevated_button.dart';
+import 'package:coflow_app/core/extension/context_extension.dart';
 
 import '../../page_view/page_view.dart';
 import 'package:flutter/gestures.dart';
@@ -19,9 +20,8 @@ class LoginView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 30.0),
+        padding: context.paddingMedium,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -31,7 +31,7 @@ class LoginView extends StatelessWidget {
             ),
             Expanded(
               flex: 16,
-              child: buildForm(),
+              child: buildForm(context),
             ),
             Expanded(
               flex: 6,
@@ -39,7 +39,7 @@ class LoginView extends StatelessWidget {
             ),
             Expanded(
               flex: 3,
-              child: buildDivider(),
+              child: buildDivider(context),
             ),
             Expanded(
               flex: 4,
@@ -64,22 +64,17 @@ class LoginView extends StatelessWidget {
 
   RichText buildRegisterText(BuildContext context) {
     return RichText(
-        text: TextSpan(
-            style: const TextStyle(
-              color: Colors.black,
-            ),
-            children: [
-          const TextSpan(text: "Don't have an account? "),
-          TextSpan(
-              text: "Register",
-              style: const TextStyle(
-                color: Colors.deepOrange,
-              ),
-              recognizer: TapGestureRecognizer()
-                ..onTap = () {
-                  context.read<AuthToggle>().toggle();
-                }),
-        ]));
+        text: TextSpan(style: context.textTheme.bodyText2, children: [
+      const TextSpan(text: "Don't have an account? "),
+      TextSpan(
+          text: "Register",
+          style: context.textTheme.bodyText2!
+              .copyWith(color: context.colors.primary),
+          recognizer: TapGestureRecognizer()
+            ..onTap = () {
+              context.read<AuthToggle>().toggle();
+            }),
+    ]));
   }
 
   TextButton buildLoginAsGuestButton(BuildContext context) {
@@ -89,9 +84,9 @@ class LoginView extends StatelessWidget {
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => const CustomPageView()));
         },
-        child: const Text(
+        child: Text(
           "Login as Guest",
-          style: TextStyle(color: Colors.grey),
+          style: TextStyle(color: context.colors.onBackground),
         ));
   }
 
@@ -111,21 +106,19 @@ class LoginView extends StatelessWidget {
                 if (result is String) {
                   context.read<FormController>().setLoginError(result);
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    backgroundColor: Colors.white,
+                    backgroundColor: context.colors.background,
                     elevation: 0,
                     content: Consumer<FormController>(
                         builder: (_, _formController, __) {
                       return _formController.loginErrorText.isNotEmpty
                           ? Container(
-                              color: Colors.red,
+                              color: context.colors.error,
                               child: ListTile(
                                 leading: const Icon(Icons.error),
-                                title: Text(
-                                  _formController.loginErrorText,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                  ),
-                                ),
+                                title: Text(_formController.loginErrorText,
+                                    style: context.textTheme.bodyText1!
+                                        .copyWith(
+                                            color: context.colors.onSecondary)),
                               ),
                             )
                           : const SizedBox();
@@ -142,85 +135,32 @@ class LoginView extends StatelessWidget {
               }
             },
           ),
-          // child: ElevatedButton(
-          //   child: const Text("Login"),
-          //   onPressed: () async {
-          //     if (_formKey.currentState!.validate()) {
-          //       FocusScope.of(context).unfocus();
-          //       var result = await auth.logIn(
-          //         email: emailController.text,
-          //         password: passwordController.text,
-          //       );
-          //       if (result is String) {
-          //         context.read<FormController>().setLoginError(result);
-
-          //         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          //           backgroundColor: Colors.white,
-          //           elevation: 0,
-          //           content: Consumer<FormController>(
-          //               builder: (_, _formController, __) {
-          //             return _formController.loginErrorText.isNotEmpty
-          //                 ? Container(
-          //                     color: Colors.red,
-          //                     child: ListTile(
-          //                       leading: const Icon(Icons.error),
-          //                       title: Text(
-          //                         _formController.loginErrorText,
-          //                         style: const TextStyle(
-          //                           color: Colors.white,
-          //                         ),
-          //                       ),
-          //                     ),
-          //                   )
-          //                 : const SizedBox();
-          //           }),
-          //         ));
-          //       } else {
-          //         Navigator.push(
-          //             context,
-          //             MaterialPageRoute(
-          //               builder: (context) => const CustomPageView(),
-          //             ));
-          //       }
-          //       _formKey.currentState!.reset();
-          //     }
-          //   },
-          //   style: ElevatedButton.styleFrom(
-          //       padding: const EdgeInsets.all(14),
-          //       shape: RoundedRectangleBorder(
-          //           borderRadius: BorderRadius.circular(15))),
-          // ),
         ),
       ],
     );
   }
 
-  Row buildDivider() {
+  Row buildDivider(BuildContext context) {
     return Row(
-      children: const [
+      children: [
         Expanded(
             child: Divider(
-          color: Color(0xffFF7465),
           thickness: 2,
+          color: context.colors.primary,
         )),
         Expanded(
-            child: Center(
-                child: Text(
-          "OR",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-        ))),
+            child:
+                Center(child: Text("OR", style: context.textTheme.bodyText1!))),
         Expanded(
             child: Divider(
-          color: Color(0xffFF7465),
           thickness: 2,
+          color: context.colors.primary,
         )),
       ],
     );
   }
 
-  Form buildForm() {
+  Form buildForm(BuildContext context) {
     return Form(
         key: _formKey,
         child: Column(
@@ -230,7 +170,8 @@ class LoginView extends StatelessWidget {
                 decoration: InputDecoration(
                     labelText: "E-mail address",
                     border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20))),
+                        borderRadius:
+                            BorderRadius.circular(context.mediumValue))),
                 textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.emailAddress,
                 controller: emailController,
@@ -245,7 +186,8 @@ class LoginView extends StatelessWidget {
                   decoration: InputDecoration(
                       labelText: "Password",
                       border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20)),
+                          borderRadius:
+                              BorderRadius.circular(context.mediumValue)),
                       suffixIcon: IconButton(
                           onPressed: _formController.showPassword,
                           icon: Icon(_formController.isPasswordVisible

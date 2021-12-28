@@ -2,6 +2,7 @@ import '../../../core/components/buttons/custom_elevated_button.dart';
 import '../../models/product_model.dart';
 import '../../services/database_service.dart';
 import 'package:flutter/material.dart';
+import 'package:coflow_app/core/extension/context_extension.dart';
 
 class ProductDetailView extends StatelessWidget {
   ProductDetailView({Key? key, required this.productModel}) : super(key: key);
@@ -14,8 +15,8 @@ class ProductDetailView extends StatelessWidget {
       body: Column(
         children: [
           Expanded(
-            flex: 4,
-            child: buildProductCard(),
+            flex: 5,
+            child: buildProductCard(context),
           ),
           Expanded(
             flex: 1,
@@ -26,7 +27,7 @@ class ProductDetailView extends StatelessWidget {
     );
   }
 
-  Center buildProductCard() {
+  Center buildProductCard(BuildContext context) {
     return Center(
       child: ListTile(
         contentPadding: EdgeInsets.zero,
@@ -37,18 +38,22 @@ class ProductDetailView extends StatelessWidget {
             fit: BoxFit.fitWidth,
           ),
           borderRadius: BorderRadius.circular(
-            20,
+            context.normalValue,
           ),
         ),
         subtitle: Padding(
-          padding: const EdgeInsets.all(4.0),
+          padding: context.paddingLow,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(productModel.name!),
+              Text(
+                productModel.name!,
+                style: context.textTheme.headline4,
+              ),
               Text(
                 "${productModel.price} \$",
-                style: const TextStyle(color: Color(0xffFE2C21)),
+                style: context.textTheme.headline6!
+                    .copyWith(color: context.colors.primary),
               ),
             ],
           ),
@@ -59,7 +64,7 @@ class ProductDetailView extends StatelessWidget {
 
   Padding buildAddToCartButton(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      padding: context.paddingNormalHorizontal,
       child: Row(
         children: [
           Expanded(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../services/auth_service.dart';
+import 'package:coflow_app/core/extension/context_extension.dart';
 
 class ProfileView extends StatelessWidget {
   ProfileView({Key? key}) : super(key: key);
@@ -14,11 +15,11 @@ class ProfileView extends StatelessWidget {
         ),
         Expanded(
           flex: 6,
-          child: buildAvatar(),
+          child: buildAvatar(context),
         ),
         Expanded(
           flex: 2,
-          child: buildProfileInfo(),
+          child: buildProfileInfo(context),
         ),
         const Spacer(
           flex: 4,
@@ -29,23 +30,30 @@ class ProfileView extends StatelessWidget {
     );
   }
 
-  CircleAvatar buildAvatar() {
-    return const CircleAvatar(
+  CircleAvatar buildAvatar(BuildContext context) {
+    return CircleAvatar(
       child: Icon(
         Icons.person,
-        size: 40,
+        color: context.theme.iconTheme.color,
+        size: 50,
       ),
-      radius: 40,
+      radius: 50,
     );
   }
 
-  Row buildProfileInfo() {
+  Row buildProfileInfo(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         auth.instance.currentUser!.email != null
-            ? Text("${auth.instance.currentUser!.email}")
-            : const Text("Guest"),
+            ? Text(
+                "${auth.instance.currentUser!.email}",
+                style: context.textTheme.bodyText1,
+              )
+            : Text(
+                "Guest",
+                style: context.textTheme.bodyText1,
+              ),
       ],
     );
   }
@@ -59,11 +67,14 @@ class ProfileView extends StatelessWidget {
               auth.logOut();
               Navigator.pop(context);
             },
-            icon: const Icon(
+            icon: Icon(
               Icons.power_settings_new_rounded,
-              color: Colors.red,
+              color: context.colors.error,
             )),
-        const Text("Log out"),
+        Text(
+          "Log out",
+          style: context.textTheme.bodyText2,
+        ),
       ],
     );
   }

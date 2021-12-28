@@ -64,19 +64,19 @@ class _CustomPageViewState extends State<CustomPageView> {
               icon: Icon(
                 Icons.home,
               ),
-              label: "home",
+              label: "Home",
             ),
             BottomNavigationBarItem(
               icon: Icon(
                 Icons.shopping_cart,
               ),
-              label: "cart",
+              label: "Cart",
             ),
             BottomNavigationBarItem(
               icon: Icon(
                 Icons.person,
               ),
-              label: "profile",
+              label: "Profile",
             ),
           ],
           showSelectedLabels: false,

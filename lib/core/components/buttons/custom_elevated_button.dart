@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:coflow_app/core/extension/context_extension.dart';
 
 class CustomElevatedButton extends StatelessWidget {
   const CustomElevatedButton({
@@ -14,15 +15,15 @@ class CustomElevatedButton extends StatelessWidget {
       child: Text(text),
       onPressed: onPressed,
       style: ButtonStyle(
-        foregroundColor: MaterialStateProperty.all(Colors.white),
+        foregroundColor: MaterialStateProperty.all(context.colors.onPrimary),
         shape: MaterialStateProperty.all(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(
-              20,
+              context.mediumValue,
             ),
           ),
         ),
-        padding: MaterialStateProperty.all(const EdgeInsets.all(15)),
+        padding: MaterialStateProperty.all(context.paddingNormal),
       ),
     );
   }

@@ -2,7 +2,7 @@ import '../../../../core/components/buttons/custom_elevated_button.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import 'package:coflow_app/core/extension/context_extension.dart';
 import '../../../controllers/auth_toggle.dart';
 import '../../../controllers/form_controller.dart';
 import '../../../services/auth_service.dart';
@@ -16,9 +16,8 @@ class SignUpView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 30.0),
+        padding: context.paddingMedium,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -28,7 +27,7 @@ class SignUpView extends StatelessWidget {
             ),
             Expanded(
               flex: 16,
-              child: buildForm(),
+              child: buildForm(context),
             ),
             Expanded(
               flex: 6,
@@ -53,22 +52,17 @@ class SignUpView extends StatelessWidget {
 
   RichText buildLoginText(BuildContext context) {
     return RichText(
-        text: TextSpan(
-            style: const TextStyle(
-              color: Colors.black,
-            ),
-            children: [
-          const TextSpan(text: "Have an account? "),
-          TextSpan(
-              text: "Login",
-              style: const TextStyle(
-                color: Colors.deepOrange,
-              ),
-              recognizer: TapGestureRecognizer()
-                ..onTap = () {
-                  context.read<AuthToggle>().toggle();
-                }),
-        ]));
+        text: TextSpan(children: [
+      const TextSpan(text: "Have an account? "),
+      TextSpan(
+          text: "Login",
+          style: context.textTheme.bodyText2!
+              .copyWith(color: context.colors.primary),
+          recognizer: TapGestureRecognizer()
+            ..onTap = () {
+              context.read<AuthToggle>().toggle();
+            }),
+    ], style: context.textTheme.bodyText2));
   }
 
   Row buildSignUpButton(BuildContext context) {
@@ -86,21 +80,19 @@ class SignUpView extends StatelessWidget {
                 if (result is String) {
                   context.read<FormController>().setSigUpError(result);
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    backgroundColor: Colors.white,
+                    backgroundColor: context.colors.background,
                     elevation: 0,
                     content: Consumer<FormController>(
                         builder: (_, _formController, __) {
                       return _formController.signUpErrorText.isNotEmpty
                           ? Container(
-                              color: Colors.red,
+                              color: context.colors.error,
                               child: ListTile(
                                 leading: const Icon(Icons.error),
-                                title: Text(
-                                  _formController.signUpErrorText,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                  ),
-                                ),
+                                title: Text(_formController.signUpErrorText,
+                                    style: context.textTheme.bodyText1!
+                                        .copyWith(
+                                            color: context.colors.onSecondary)),
                               ),
                             )
                           : const SizedBox();
@@ -115,56 +107,12 @@ class SignUpView extends StatelessWidget {
             },
             text: "Sign Up",
           ),
-          //  ElevatedButton(
-          //   child: const Text("Sign Up"),
-          //   onPressed: () async {
-          //     if (_formKey.currentState!.validate()) {
-          //       FocusScope.of(context).unfocus();
-          //       var result = await auth.signUp(
-          //         email: emailController.text,
-          //         password: passwordController.text,
-          //       );
-          //       if (result is String) {
-          //         context.read<FormController>().setSigUpError(result);
-          //         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          //           backgroundColor: Colors.white,
-          //           elevation: 0,
-          //           content: Consumer<FormController>(
-          //               builder: (_, _formController, __) {
-          //             return _formController.signUpErrorText.isNotEmpty
-          //                 ? Container(
-          //                     color: Colors.red,
-          //                     child: ListTile(
-          //                       leading: const Icon(Icons.error),
-          //                       title: Text(
-          //                         _formController.signUpErrorText,
-          //                         style: const TextStyle(
-          //                           color: Colors.white,
-          //                         ),
-          //                       ),
-          //                     ),
-          //                   )
-          //                 : const SizedBox();
-          //           }),
-          //         ));
-          //       } else {
-          //         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          //             content: Text("You succesfully signed up. Now Login.")));
-          //       }
-          //       _formKey.currentState!.reset();
-          //     }
-          //   },
-          //   style: ElevatedButton.styleFrom(
-          //       padding: const EdgeInsets.all(14),
-          //       shape: RoundedRectangleBorder(
-          //           borderRadius: BorderRadius.circular(15))),
-          // ),
         ),
       ],
     );
   }
 
-  Form buildForm() {
+  Form buildForm(BuildContext context) {
     return Form(
         key: _formKey,
         child: Column(
@@ -174,7 +122,8 @@ class SignUpView extends StatelessWidget {
                 decoration: InputDecoration(
                     labelText: "E-mail address",
                     border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20))),
+                        borderRadius:
+                            BorderRadius.circular(context.mediumValue))),
                 textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.emailAddress,
                 controller: emailController,
@@ -189,7 +138,8 @@ class SignUpView extends StatelessWidget {
                   decoration: InputDecoration(
                       labelText: "Password",
                       border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20)),
+                          borderRadius:
+                              BorderRadius.circular(context.mediumValue)),
                       suffixIcon: IconButton(
                           onPressed: _formController.showPassword,
                           icon: Icon(_formController.isPasswordVisible

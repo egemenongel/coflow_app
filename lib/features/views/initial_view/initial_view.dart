@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:coflow_app/core/extension/context_extension.dart';
 import '../auth/auth_wrapper/auth_wrapper.dart';
 import '../breaking_bad/characters_view.dart';
 
@@ -9,10 +9,10 @@ class InitialView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: context.colors.background,
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.all(30),
+          padding: EdgeInsets.all(context.mediumValue),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -48,12 +48,13 @@ class InitialView extends StatelessWidget {
               child: Image.network(
                 "https://i.pinimg.com/originals/d3/bb/d0/d3bbd00fc97e601c6dabca395af2e7f6.png",
               ),
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(context.lowValue),
             ),
             const Spacer(),
-            const Text(
+            Text(
               "Breaking Bad Characters",
-              style: TextStyle(color: Colors.white),
+              style: context.textTheme.headline6!
+                  .copyWith(color: context.colors.onSecondary),
             ),
             const Spacer(
               flex: 5,
@@ -70,12 +71,13 @@ class InitialView extends StatelessWidget {
             child: Image.network(
               "https://images.unsplash.com/photo-1483985988355-763728e1935b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
             ),
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(context.lowValue),
           ),
           const Spacer(),
-          const Text(
+          Text(
             "E-commerce App",
-            style: TextStyle(color: Colors.white),
+            style: context.textTheme.headline6!
+                .copyWith(color: context.colors.onSecondary),
           ),
           const Spacer(
             flex: 5,
