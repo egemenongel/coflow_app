@@ -1,11 +1,10 @@
+import 'features/controllers/auth_toggle.dart';
+import 'features/controllers/form_controller.dart';
+import 'features/services/auth_service.dart';
+import 'features/views/initial_view/initial_view.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import 'controllers/auth_toggle.dart';
-import 'controllers/form_controller.dart';
-import 'services/auth_service.dart';
-import 'views/initial_view/initial_view.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,6 +35,20 @@ class _MyAppState extends State<MyApp> {
   final Future<FirebaseApp> _initialization = Firebase.initializeApp();
   @override
   Widget build(BuildContext context) {
+    Map<int, Color> salmonOpacity = {
+      50: const Color.fromRGBO(4, 131, 184, .1),
+      100: const Color.fromRGBO(4, 131, 184, .2),
+      200: const Color.fromRGBO(4, 131, 184, .3),
+      300: const Color.fromRGBO(4, 131, 184, .4),
+      400: const Color.fromRGBO(4, 131, 184, .5),
+      500: const Color.fromRGBO(4, 131, 184, .6),
+      600: const Color.fromRGBO(4, 131, 184, .7),
+      700: const Color.fromRGBO(4, 131, 184, .8),
+      800: const Color.fromRGBO(4, 131, 184, .9),
+      900: const Color.fromRGBO(4, 131, 184, 1),
+    };
+    MaterialColor salmon = MaterialColor(0xffFF7465, salmonOpacity);
+
     return FutureBuilder(
       future: _initialization,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -46,9 +59,9 @@ class _MyAppState extends State<MyApp> {
           return MaterialApp(
             title: 'CoFlow App',
             theme: ThemeData(
-              primaryColor: Colors.teal,
-              primarySwatch: Colors.deepOrange,
-              iconTheme: const IconThemeData(color: Color(0xffEAEAE9)),
+              primaryColor: salmon,
+              primarySwatch: salmon,
+              unselectedWidgetColor: const Color(0xffd8d8d8),
             ),
             home: const InitialView(),
             debugShowCheckedModeBanner: false,

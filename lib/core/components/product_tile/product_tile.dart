@@ -1,7 +1,7 @@
-import 'package:coflow_app/services/database_service.dart';
-
-import '../../models/product_model.dart';
 import 'package:flutter/material.dart';
+
+import '../../../features/models/product_model.dart';
+import '../../../features/services/database_service.dart';
 
 class ProductTile extends StatefulWidget {
   ProductTile({Key? key, required this.myProduct}) : super(key: key);

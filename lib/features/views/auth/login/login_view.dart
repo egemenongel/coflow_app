@@ -1,3 +1,6 @@
+import '../../../../core/components/buttons/custom_elevated_button.dart';
+
+import '../../page_view/page_view.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -6,12 +9,13 @@ import '../../../controllers/auth_toggle.dart';
 import '../../../controllers/form_controller.dart';
 import '../../../services/auth_service.dart';
 
-class SignUpView extends StatelessWidget {
-  SignUpView({Key? key}) : super(key: key);
+class LoginView extends StatelessWidget {
+  LoginView({Key? key}) : super(key: key);
   static final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final auth = AuthService();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,17 +35,25 @@ class SignUpView extends StatelessWidget {
             ),
             Expanded(
               flex: 6,
-              child: buildSignUpButton(context),
+              child: buildLoginButton(context),
             ),
-            const Spacer(
-              flex: 4,
+            Expanded(
+              flex: 3,
+              child: buildDivider(),
             ),
             Expanded(
               flex: 4,
-              child: buildLoginText(context),
+              child: buildLoginAsGuestButton(context),
             ),
             const Spacer(
-              flex: 13,
+              flex: 2,
+            ),
+            Expanded(
+              flex: 4,
+              child: buildRegisterText(context),
+            ),
+            const Spacer(
+              flex: 8,
             ),
           ],
         ),
@@ -50,16 +62,16 @@ class SignUpView extends StatelessWidget {
     );
   }
 
-  RichText buildLoginText(BuildContext context) {
+  RichText buildRegisterText(BuildContext context) {
     return RichText(
         text: TextSpan(
             style: const TextStyle(
               color: Colors.black,
             ),
             children: [
-          const TextSpan(text: "Have an account? "),
+          const TextSpan(text: "Don't have an account? "),
           TextSpan(
-              text: "Login",
+              text: "Register",
               style: const TextStyle(
                 color: Colors.deepOrange,
               ),
@@ -70,33 +82,46 @@ class SignUpView extends StatelessWidget {
         ]));
   }
 
-  Row buildSignUpButton(BuildContext context) {
+  TextButton buildLoginAsGuestButton(BuildContext context) {
+    return TextButton(
+        onPressed: () {
+          auth.loginAnonymously();
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const CustomPageView()));
+        },
+        child: const Text(
+          "Login as Guest",
+          style: TextStyle(color: Colors.grey),
+        ));
+  }
+
+  Row buildLoginButton(BuildContext context) {
     return Row(
       children: [
         Expanded(
-          child: ElevatedButton(
-            child: const Text("Sign Up"),
+          child: CustomElevatedButton(
+            text: "Login",
             onPressed: () async {
               if (_formKey.currentState!.validate()) {
                 FocusScope.of(context).unfocus();
-                var result = await auth.signUp(
+                var result = await auth.logIn(
                   email: emailController.text,
                   password: passwordController.text,
                 );
                 if (result is String) {
-                  context.read<FormController>().setSigUpError(result);
+                  context.read<FormController>().setLoginError(result);
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     backgroundColor: Colors.white,
                     elevation: 0,
                     content: Consumer<FormController>(
                         builder: (_, _formController, __) {
-                      return _formController.signUpErrorText.isNotEmpty
+                      return _formController.loginErrorText.isNotEmpty
                           ? Container(
                               color: Colors.red,
                               child: ListTile(
                                 leading: const Icon(Icons.error),
                                 title: Text(
-                                  _formController.signUpErrorText,
+                                  _formController.loginErrorText,
                                   style: const TextStyle(
                                     color: Colors.white,
                                   ),
@@ -107,18 +132,90 @@ class SignUpView extends StatelessWidget {
                     }),
                   ));
                 } else {
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text("You succesfully signed up. Now Login.")));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const CustomPageView(),
+                      ));
                 }
                 _formKey.currentState!.reset();
               }
             },
-            style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.all(14),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15))),
           ),
+          // child: ElevatedButton(
+          //   child: const Text("Login"),
+          //   onPressed: () async {
+          //     if (_formKey.currentState!.validate()) {
+          //       FocusScope.of(context).unfocus();
+          //       var result = await auth.logIn(
+          //         email: emailController.text,
+          //         password: passwordController.text,
+          //       );
+          //       if (result is String) {
+          //         context.read<FormController>().setLoginError(result);
+
+          //         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          //           backgroundColor: Colors.white,
+          //           elevation: 0,
+          //           content: Consumer<FormController>(
+          //               builder: (_, _formController, __) {
+          //             return _formController.loginErrorText.isNotEmpty
+          //                 ? Container(
+          //                     color: Colors.red,
+          //                     child: ListTile(
+          //                       leading: const Icon(Icons.error),
+          //                       title: Text(
+          //                         _formController.loginErrorText,
+          //                         style: const TextStyle(
+          //                           color: Colors.white,
+          //                         ),
+          //                       ),
+          //                     ),
+          //                   )
+          //                 : const SizedBox();
+          //           }),
+          //         ));
+          //       } else {
+          //         Navigator.push(
+          //             context,
+          //             MaterialPageRoute(
+          //               builder: (context) => const CustomPageView(),
+          //             ));
+          //       }
+          //       _formKey.currentState!.reset();
+          //     }
+          //   },
+          //   style: ElevatedButton.styleFrom(
+          //       padding: const EdgeInsets.all(14),
+          //       shape: RoundedRectangleBorder(
+          //           borderRadius: BorderRadius.circular(15))),
+          // ),
         ),
+      ],
+    );
+  }
+
+  Row buildDivider() {
+    return Row(
+      children: const [
+        Expanded(
+            child: Divider(
+          color: Color(0xffFF7465),
+          thickness: 2,
+        )),
+        Expanded(
+            child: Center(
+                child: Text(
+          "OR",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ))),
+        Expanded(
+            child: Divider(
+          color: Color(0xffFF7465),
+          thickness: 2,
+        )),
       ],
     );
   }

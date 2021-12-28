@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:coflow_app/models/product_model.dart';
+import '../models/product_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class DatabaseService {
@@ -15,6 +15,7 @@ class DatabaseService {
   DocumentReference get userCartReference => _instance
       .collection("userCarts")
       .doc(FirebaseAuth.instance.currentUser!.uid);
+
   Future updateUserData(
     String? email,
   ) async {
@@ -23,16 +24,24 @@ class DatabaseService {
         "productList": [],
       },
     );
-    return await usersReference.doc(uid).set({
+    return await usersReference
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .set({
       "email": email,
     });
   }
 
-  // addToCart(Object product) {
-  //   cartReference.add(product);
-  // }
+  Future addToCart(ProductModel product) async {
+    userCartReference.update(
+      {
+        "productList": FieldValue.arrayUnion([
+          product.toJson(),
+        ]),
+      },
+    );
+  }
 
-  increment(ProductModel product) async {
+  Future increment(ProductModel product) async {
     // If the product exists => count++ else add product
     Map<String, dynamic> productJson = product.toJson();
     DocumentSnapshot list = await userCartReference.get();
@@ -65,7 +74,7 @@ class DatabaseService {
     await userCartReference.set({"productList": arr});
   }
 
-  decrement(ProductModel product) async {
+  Future decrement(ProductModel product) async {
     Map<String, dynamic> productJson = product.toJson();
     DocumentSnapshot list = await userCartReference.get();
     List arr = list.get("productList");
@@ -84,34 +93,13 @@ class DatabaseService {
     await userCartReference.set({"productList": arr});
   }
 
-  addToCart(ProductModel product) async {
-    userCartReference.update(
-      {
-        "productList": FieldValue.arrayUnion([
-          product.toJson(),
-        ]),
-      },
-    );
-  }
-
-  removeProduct(ProductModel product) async {
+  Future removeProduct(ProductModel product) async {
     userCartReference.set({
       "productList": FieldValue.arrayRemove([product.toJson()]),
     }, SetOptions(merge: true));
   }
 
-  clearCart() async {
+  Future clearCart() async {
     userCartReference.update({"productList": FieldValue.delete()});
   }
-  // addToUserCart(ProductModel product) async {
-  //   userCartReference.collection("cart").add(product.toJson());
-
-  //   // List list = await userCartReference.get(FieldPath());
-  //   // userCartReference.set({
-  //   //   "productList": [
-  //   //     product.toJson(),
-  //   //     product.toJson(),
-  //   //   ]
-  //   // });
-  // }
 }

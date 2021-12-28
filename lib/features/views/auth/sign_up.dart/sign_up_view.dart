@@ -1,4 +1,4 @@
-import '../../page_view/page_view.dart';
+import '../../../../core/components/buttons/custom_elevated_button.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -7,13 +7,12 @@ import '../../../controllers/auth_toggle.dart';
 import '../../../controllers/form_controller.dart';
 import '../../../services/auth_service.dart';
 
-class LoginView extends StatelessWidget {
-  LoginView({Key? key}) : super(key: key);
+class SignUpView extends StatelessWidget {
+  SignUpView({Key? key}) : super(key: key);
   static final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final auth = AuthService();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,25 +32,17 @@ class LoginView extends StatelessWidget {
             ),
             Expanded(
               flex: 6,
-              child: buildLoginButton(context),
+              child: buildSignUpButton(context),
             ),
-            Expanded(
-              flex: 3,
-              child: buildDivider(),
+            const Spacer(
+              flex: 4,
             ),
             Expanded(
               flex: 4,
-              child: buildLoginAsGuestButton(context),
+              child: buildLoginText(context),
             ),
             const Spacer(
-              flex: 2,
-            ),
-            Expanded(
-              flex: 4,
-              child: buildRegisterText(context),
-            ),
-            const Spacer(
-              flex: 8,
+              flex: 13,
             ),
           ],
         ),
@@ -60,16 +51,16 @@ class LoginView extends StatelessWidget {
     );
   }
 
-  RichText buildRegisterText(BuildContext context) {
+  RichText buildLoginText(BuildContext context) {
     return RichText(
         text: TextSpan(
             style: const TextStyle(
               color: Colors.black,
             ),
             children: [
-          const TextSpan(text: "Don't have an account? "),
+          const TextSpan(text: "Have an account? "),
           TextSpan(
-              text: "Register",
+              text: "Login",
               style: const TextStyle(
                 color: Colors.deepOrange,
               ),
@@ -80,47 +71,32 @@ class LoginView extends StatelessWidget {
         ]));
   }
 
-  TextButton buildLoginAsGuestButton(BuildContext context) {
-    return TextButton(
-        onPressed: () {
-          auth.loginAnonymously();
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const CustomPageView()));
-        },
-        child: const Text(
-          "Login as Guest",
-          style: TextStyle(color: Colors.grey),
-        ));
-  }
-
-  Row buildLoginButton(BuildContext context) {
+  Row buildSignUpButton(BuildContext context) {
     return Row(
       children: [
         Expanded(
-          child: ElevatedButton(
-            child: const Text("Login"),
+          child: CustomElevatedButton(
             onPressed: () async {
               if (_formKey.currentState!.validate()) {
                 FocusScope.of(context).unfocus();
-                var result = await auth.logIn(
+                var result = await auth.signUp(
                   email: emailController.text,
                   password: passwordController.text,
                 );
                 if (result is String) {
-                  context.read<FormController>().setLoginError(result);
-
+                  context.read<FormController>().setSigUpError(result);
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     backgroundColor: Colors.white,
                     elevation: 0,
                     content: Consumer<FormController>(
                         builder: (_, _formController, __) {
-                      return _formController.loginErrorText.isNotEmpty
+                      return _formController.signUpErrorText.isNotEmpty
                           ? Container(
                               color: Colors.red,
                               child: ListTile(
                                 leading: const Icon(Icons.error),
                                 title: Text(
-                                  _formController.loginErrorText,
+                                  _formController.signUpErrorText,
                                   style: const TextStyle(
                                     color: Colors.white,
                                   ),
@@ -131,46 +107,59 @@ class LoginView extends StatelessWidget {
                     }),
                   ));
                 } else {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const CustomPageView(),
-                      ));
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text("You succesfully signed up. Now Login.")));
                 }
                 _formKey.currentState!.reset();
               }
             },
-            style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.all(14),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15))),
+            text: "Sign Up",
           ),
+          //  ElevatedButton(
+          //   child: const Text("Sign Up"),
+          //   onPressed: () async {
+          //     if (_formKey.currentState!.validate()) {
+          //       FocusScope.of(context).unfocus();
+          //       var result = await auth.signUp(
+          //         email: emailController.text,
+          //         password: passwordController.text,
+          //       );
+          //       if (result is String) {
+          //         context.read<FormController>().setSigUpError(result);
+          //         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          //           backgroundColor: Colors.white,
+          //           elevation: 0,
+          //           content: Consumer<FormController>(
+          //               builder: (_, _formController, __) {
+          //             return _formController.signUpErrorText.isNotEmpty
+          //                 ? Container(
+          //                     color: Colors.red,
+          //                     child: ListTile(
+          //                       leading: const Icon(Icons.error),
+          //                       title: Text(
+          //                         _formController.signUpErrorText,
+          //                         style: const TextStyle(
+          //                           color: Colors.white,
+          //                         ),
+          //                       ),
+          //                     ),
+          //                   )
+          //                 : const SizedBox();
+          //           }),
+          //         ));
+          //       } else {
+          //         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          //             content: Text("You succesfully signed up. Now Login.")));
+          //       }
+          //       _formKey.currentState!.reset();
+          //     }
+          //   },
+          //   style: ElevatedButton.styleFrom(
+          //       padding: const EdgeInsets.all(14),
+          //       shape: RoundedRectangleBorder(
+          //           borderRadius: BorderRadius.circular(15))),
+          // ),
         ),
-      ],
-    );
-  }
-
-  Row buildDivider() {
-    return Row(
-      children: const [
-        Expanded(
-            child: Divider(
-          color: Colors.orange,
-          thickness: 2,
-        )),
-        Expanded(
-            child: Center(
-                child: Text(
-          "OR",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-        ))),
-        Expanded(
-            child: Divider(
-          color: Colors.orange,
-          thickness: 2,
-        )),
       ],
     );
   }

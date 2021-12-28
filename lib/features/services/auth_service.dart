@@ -1,7 +1,5 @@
-import 'dart:developer';
-
-import 'package:coflow_app/models/user_model.dart';
-import 'package:coflow_app/services/database_service.dart';
+import '../models/user_model.dart';
+import 'database_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthService {
@@ -28,7 +26,6 @@ class AuthService {
       UserCredential credential = await instance.signInWithEmailAndPassword(
           email: email!, password: password!);
       User? user = credential.user;
-      // return user;
       return _userFromFirebase(user);
     } on FirebaseAuthException catch (e) {
       return e.code;
@@ -39,7 +36,6 @@ class AuthService {
     try {
       await DatabaseService(uid: instance.currentUser!.uid)
           .updateUserData("guest");
-      return _userFromFirebase(instance.currentUser);
     } on FirebaseAuthException catch (e) {
       return e.code;
     }

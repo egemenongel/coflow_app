@@ -1,3 +1,4 @@
+import '../../../core/components/buttons/custom_elevated_button.dart';
 import '../../models/product_model.dart';
 import '../../services/database_service.dart';
 import 'package:flutter/material.dart';
@@ -62,30 +63,40 @@ class ProductDetailView extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-              child: ElevatedButton(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                Icon(
-                  Icons.add_shopping_cart,
-                ),
-                Spacer(),
-                Text("Add to Cart"),
-                Spacer(),
-              ],
+            child: CustomElevatedButton(
+              text: "Add to Cart",
+              onPressed: () {
+                databaseService.addToCart(productModel);
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text("Added to cart"),
+                ));
+              },
             ),
-            onPressed: () {
-              databaseService.addToCart(productModel);
-              // databaseService.addToCart(productModel.toJson());
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                content: Text("Added to cart"),
-              ));
-            },
-            style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.all(14),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15))),
-          ))
+            //     ElevatedButton(
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.center,
+            //     children: const [
+            //       Icon(
+            //         Icons.add_shopping_cart,
+            //       ),
+            //       Spacer(),
+            //       Text("Add to Cart"),
+            //       Spacer(),
+            //     ],
+            //   ),
+            //   onPressed: () {
+            //     databaseService.addToCart(productModel);
+            //     // databaseService.addToCart(productModel.toJson());
+            //     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            //       content: Text("Added to cart"),
+            //     ));
+            //   },
+            //   style: ElevatedButton.styleFrom(
+            //       padding: const EdgeInsets.all(14),
+            //       shape: RoundedRectangleBorder(
+            //           borderRadius: BorderRadius.circular(15))),
+            // )
+          )
         ],
       ),
     );
