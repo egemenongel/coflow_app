@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../services/api_service.dart';
-import 'package:coflow_app/core/extension/context_extension.dart';
+import '../../../core/extension/context_extension.dart';
 
 class CharactersView extends StatefulWidget {
   const CharactersView({Key? key}) : super(key: key);

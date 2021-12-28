@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:coflow_app/core/extension/context_extension.dart';
+
+import '../../extension/context_extension.dart';
 
 class CustomElevatedButton extends StatelessWidget {
   const CustomElevatedButton({

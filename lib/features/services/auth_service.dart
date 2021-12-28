@@ -1,5 +1,5 @@
-import 'package:coflow_app/features/models/user_model.dart';
-import 'package:coflow_app/features/services/database_service.dart';
+import '../models/user_model.dart';
+import 'database_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthService {

@@ -42,18 +42,9 @@ class DatabaseService {
   }
 
   Future increment(ProductModel product) async {
-    // If the product exists => count++ else add product
     Map<String, dynamic> productJson = product.toJson();
     DocumentSnapshot list = await userCartReference.get();
     List arr = list.get("productList");
-    // if (arr[0]["productCode"] == product.toJson()["productCode"]) {
-    //   print("a");
-    // } else {
-    //   print("b");
-    // }
-
-    // productJson["count"] = 2;
-    // List<Map<String, dynamic>> a = list.get("productList");
 
     for (var item in arr) {
       if (arr.contains(item)) {
@@ -64,12 +55,6 @@ class DatabaseService {
         }
       }
     }
-
-    // if (arr.contains(productJson)) {
-    //   print("a");
-    // }
-
-    // arr[0]["count"] = 1;
 
     await userCartReference.set({"productList": arr});
   }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../services/auth_service.dart';
-import 'package:coflow_app/core/extension/context_extension.dart';
+import '../../../core/extension/context_extension.dart';
 
 class ProfileView extends StatelessWidget {
   ProfileView({Key? key}) : super(key: key);
@@ -32,6 +32,7 @@ class ProfileView extends StatelessWidget {
 
   CircleAvatar buildAvatar(BuildContext context) {
     return CircleAvatar(
+      backgroundColor: context.colors.secondary,
       child: Icon(
         Icons.person,
         color: context.theme.iconTheme.color,

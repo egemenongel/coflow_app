@@ -1,9 +1,8 @@
-import '../home/home_view.dart';
-import '../shopping_cart_tab/shopping_cart_view.dart';
-
-import '../profile_view/profile_view.dart';
-
 import 'package:flutter/material.dart';
+
+import '../home/home_view.dart';
+import '../profile/profile_view.dart';
+import '../shopping_cart/shopping_cart_view.dart';
 
 class CustomPageView extends StatefulWidget {
   const CustomPageView({Key? key}) : super(key: key);

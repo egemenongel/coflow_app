@@ -2,7 +2,7 @@ import '../../../../core/components/buttons/custom_elevated_button.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:coflow_app/core/extension/context_extension.dart';
+import '../../../../core/extension/context_extension.dart';
 import '../../../controllers/auth_toggle.dart';
 import '../../../controllers/form_controller.dart';
 import '../../../services/auth_service.dart';

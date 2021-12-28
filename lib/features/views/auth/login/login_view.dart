@@ -1,5 +1,5 @@
 import '../../../../core/components/buttons/custom_elevated_button.dart';
-import 'package:coflow_app/core/extension/context_extension.dart';
+import '../../../../core/extension/context_extension.dart';
 
 import '../../page_view/page_view.dart';
 import 'package:flutter/gestures.dart';

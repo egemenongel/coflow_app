@@ -2,7 +2,7 @@ import '../../../core/components/buttons/custom_elevated_button.dart';
 import '../../models/product_model.dart';
 import '../../services/database_service.dart';
 import 'package:flutter/material.dart';
-import 'package:coflow_app/core/extension/context_extension.dart';
+import '../../../core/extension/context_extension.dart';
 
 class ProductDetailView extends StatelessWidget {
   ProductDetailView({Key? key, required this.productModel}) : super(key: key);

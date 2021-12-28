@@ -3,7 +3,7 @@ import '../../services/auth_service.dart';
 import '../../services/database_service.dart';
 import '../product_detail/product_detail_view.dart';
 import 'package:flutter/material.dart';
-import 'package:coflow_app/core/extension/context_extension.dart';
+import '../../../core/extension/context_extension.dart';
 
 class HomeView extends StatelessWidget {
   HomeView({Key? key}) : super(key: key);
@@ -12,39 +12,50 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          StreamBuilder(
-            stream: databaseService.productsReference.snapshots(),
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if (!snapshot.hasData) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-              if (snapshot.hasError) {
-                Text("${snapshot.error}");
-              }
-              return Expanded(
+      body: StreamBuilder(
+        stream: databaseService.productsReference.snapshots(),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          if (snapshot.hasError) {
+            Text("${snapshot.error}");
+          }
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(flex: 2, child: buildHeaderText(context)),
+              Expanded(
+                  flex: 18,
                   child: GridView.builder(
-                padding: EdgeInsets.all(context.lowValue),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                ),
-                itemCount: snapshot.data.docs.length,
-                itemBuilder: (BuildContext context, int index) {
-                  var product = snapshot.data.docs[index];
-                  Map<String, dynamic> data =
-                      product.data() as Map<String, dynamic>;
-                  var productModel = ProductModel.fromJson(data);
-                  return buildProductCard(context, productModel);
-                },
-              ));
-            },
-          ),
-        ],
+                    padding: EdgeInsets.all(context.lowValue),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                    ),
+                    itemCount: snapshot.data.docs.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      var product = snapshot.data.docs[index];
+                      Map<String, dynamic> data =
+                          product.data() as Map<String, dynamic>;
+                      var productModel = ProductModel.fromJson(data);
+                      return buildProductCard(context, productModel);
+                    },
+                  )),
+            ],
+          );
+        },
       ),
+    );
+  }
+
+  Padding buildHeaderText(BuildContext context) {
+    return Padding(
+      padding: context.paddingMediumHorizontal,
+      child: Text("Most Popular", style: context.textTheme.headline4!),
     );
   }
 
@@ -85,7 +96,7 @@ class HomeView extends StatelessWidget {
             Text(productModel.name!),
             Text(
               "${productModel.price!} \$",
-              style: context.textTheme.bodyText1!
+              style: context.textTheme.bodyText2!
                   .copyWith(color: context.colors.primary),
             ),
           ],
