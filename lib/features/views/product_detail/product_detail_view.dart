@@ -8,7 +8,6 @@ class ProductDetailView extends StatelessWidget {
   ProductDetailView({Key? key, required this.productModel}) : super(key: key);
   final ProductModel productModel;
   final DatabaseService databaseService = DatabaseService();
-  bool _isSnackbarActive = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,7 +71,6 @@ class ProductDetailView extends StatelessWidget {
               text: "Add to Cart",
               onPressed: () {
                 databaseService.addToCart(productModel);
-                _isSnackbarActive = true;
                 ScaffoldMessenger.of(context)
                     .showSnackBar(const SnackBar(
                       content: Text("Added to cart"),
