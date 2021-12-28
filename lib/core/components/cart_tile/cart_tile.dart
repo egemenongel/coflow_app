@@ -1,5 +1,5 @@
-import 'package:coflow_app/features/models/product_model.dart';
-import 'package:coflow_app/features/services/database_service.dart';
+import '../../../features/models/product_model.dart';
+import '../../../features/services/database_service.dart';
 import 'package:flutter/material.dart';
 import '../../../core/extension/context_extension.dart';
 

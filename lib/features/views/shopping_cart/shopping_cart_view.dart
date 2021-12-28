@@ -1,5 +1,5 @@
-import 'package:coflow_app/core/components/buttons/custom_elevated_button.dart';
-import 'package:coflow_app/core/components/cart_tile/cart_tile.dart';
+import '../../../core/components/buttons/custom_elevated_button.dart';
+import '../../../core/components/cart_tile/cart_tile.dart';
 
 import '../../services/database_service.dart';
 

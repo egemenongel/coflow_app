@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../services/auth_service.dart';
 import '../../../core/extension/context_extension.dart';
+import '../../services/auth_service.dart';
 
 class ProfileView extends StatelessWidget {
   ProfileView({Key? key}) : super(key: key);

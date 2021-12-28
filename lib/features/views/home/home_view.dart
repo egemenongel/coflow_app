@@ -1,9 +1,10 @@
+import 'package:flutter/material.dart';
+
+import '../../../core/extension/context_extension.dart';
 import '../../models/product_model.dart';
 import '../../services/auth_service.dart';
 import '../../services/database_service.dart';
 import '../product_detail/product_detail_view.dart';
-import 'package:flutter/material.dart';
-import '../../../core/extension/context_extension.dart';
 
 class HomeView extends StatelessWidget {
   HomeView({Key? key}) : super(key: key);

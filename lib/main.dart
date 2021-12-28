@@ -1,12 +1,12 @@
-import 'core/theme/app_theme.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import 'core/theme/app_theme.dart';
 import 'features/controllers/auth_toggle.dart';
 import 'features/controllers/form_controller.dart';
 import 'features/services/auth_service.dart';
 import 'features/views/initial_view/initial_view.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

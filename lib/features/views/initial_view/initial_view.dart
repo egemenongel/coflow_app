@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../core/extension/context_extension.dart';
 import '../auth/auth_wrapper/auth_wrapper.dart';
 import '../breaking_bad/characters_view.dart';
