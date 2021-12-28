@@ -1,3 +1,4 @@
+import 'package:coflow_app/core/components/buttons/custom_elevated_button.dart';
 import 'package:coflow_app/core/components/cart_tile/cart_tile.dart';
 
 import '../../services/database_service.dart';
@@ -32,8 +33,8 @@ class ShoppingCartView extends StatelessWidget {
                 ...buildEmptyCart(context)
               else ...[
                 Expanded(
-                  flex: 1,
-                  child: buildCartText(context),
+                  flex: 2,
+                  child: buildCartHeader(context),
                 ),
                 const Spacer(
                   flex: 1,
@@ -41,11 +42,16 @@ class ShoppingCartView extends StatelessWidget {
                 Expanded(
                   flex: 18,
                   child: buildCart(productList),
-                )
+                ),
+                // Text("total:${data["sum"] ?? ""}"),
               ],
-              // productList.isEmpty
-              //     ? const SizedBox()
-              //     : Expanded(flex: 2, child: buildTotalInfo(context, data)),
+              if (productList.isEmpty) ...[
+                const SizedBox()
+              ] else ...[
+                Expanded(child: buildTotal(context, data)),
+                const Spacer(),
+                Expanded(flex: 2, child: buildCheckoutButton(context)),
+              ]
             ],
           ),
         );
@@ -53,15 +59,49 @@ class ShoppingCartView extends StatelessWidget {
     );
   }
 
-  Row buildCartText(BuildContext context) {
+  Row buildCartHeader(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
           "Cart",
           style: context.textTheme.headline5!.copyWith(
             fontWeight: FontWeight.bold,
           ),
+        ),
+        Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(context.lowValue),
+              color: context.colors.error),
+          child: IconButton(
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (context) => SimpleDialog(
+                          title: const Center(
+                            child: Text("Clear the cart?"),
+                          ),
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                TextButton(
+                                    onPressed: () {
+                                      databaseService.clearCart();
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text("Yes")),
+                                TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text("No"))
+                              ],
+                            )
+                          ],
+                        ));
+              },
+              icon: const Icon(Icons.delete)),
         ),
       ],
     );
@@ -74,34 +114,6 @@ class ShoppingCartView extends StatelessWidget {
         var product = ProductModel.fromJson(productList[index]);
         return CartTile(product: product);
       },
-    );
-  }
-
-  buildDialog(BuildContext context, List productList) {
-    return SimpleDialog(
-      title: const Center(
-        child: Text("Clear the cart?"),
-      ),
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            TextButton(
-                onPressed: () {
-                  for (var product in productList) {
-                    product.delete();
-                  }
-                  Navigator.pop(context);
-                },
-                child: const Text("Yes")),
-            TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text("No"))
-          ],
-        )
-      ],
     );
   }
 
@@ -134,66 +146,36 @@ class ShoppingCartView extends StatelessWidget {
     ];
   }
 
-  // Row buildTotalInfo(BuildContext context, Map<String, dynamic> data) {
-  //   return Row(
-  //     mainAxisAlignment: MainAxisAlignment.end,
-  //     mainAxisSize: MainAxisSize.max,
-  //     children: [
-  //       const Spacer(
-  //         flex: 4,
-  //       ),
-  //       const Expanded(
-  //         flex: 1,
-  //         child: Text(
-  //           "Total:",
-  //           style: TextStyle(
-  //             fontWeight: FontWeight.bold,
-  //           ),
-  //         ),
-  //       ),
-  //       const Spacer(
-  //         flex: 1,
-  //       ),
-  //       Expanded(
-  //         flex: 1,
-  //         child: Container(
-  //             decoration: BoxDecoration(
-  //                 borderRadius: BorderRadius.circular(context.lowValue),
-  //                 color: context.colors.error),
-  //             child: FittedBox(
-  //               child: IconButton(
-  //                   onPressed: () {
-  //                     showDialog(
-  //                         context: context,
-  //                         builder: (context) => SimpleDialog(
-  //                               title: const Center(
-  //                                 child: Text("Clear the cart?"),
-  //                               ),
-  //                               children: [
-  //                                 Row(
-  //                                   mainAxisAlignment:
-  //                                       MainAxisAlignment.spaceBetween,
-  //                                   children: [
-  //                                     TextButton(
-  //                                         onPressed: () {
-  //                                           databaseService.clearCart();
-  //                                           Navigator.pop(context);
-  //                                         },
-  //                                         child: const Text("Yes")),
-  //                                     TextButton(
-  //                                         onPressed: () {
-  //                                           Navigator.pop(context);
-  //                                         },
-  //                                         child: const Text("No"))
-  //                                   ],
-  //                                 )
-  //                               ],
-  //                             ));
-  //                   },
-  //                   icon: const Icon(Icons.delete)),
-  //             )),
-  //       )
-  //     ],
-  //   );
-  // }
+  Row buildTotal(BuildContext context, Map<String, dynamic> data) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          "Total:",
+          style: context.textTheme.bodyText1,
+        ),
+        RichText(
+            text: TextSpan(
+                style: context.textTheme.headline6!
+                    .copyWith(color: context.colors.primary),
+                children: [
+              const TextSpan(text: "\$ "),
+              TextSpan(
+                  text: "${data["sum"] ?? ""}",
+                  style: context.textTheme.headline6),
+            ])),
+      ],
+    );
+  }
+
+  Row buildCheckoutButton(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Expanded(
+            child: CustomElevatedButton(text: "Checkout", onPressed: () {})),
+      ],
+    );
+  }
 }

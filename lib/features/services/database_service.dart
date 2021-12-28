@@ -39,6 +39,26 @@ class DatabaseService {
         ]),
       },
     );
+    updateSum();
+  }
+
+  Future updateSum() async {
+    DocumentSnapshot list = await userCartReference.get();
+    List arr = list.get("productList");
+    num sum = 0;
+    for (var item in arr) {
+      sum += item["productCount"] * item["productPrice"];
+    }
+    userCartReference.update({
+      "sum": sum,
+    });
+  }
+
+  Future getSum() async {
+    DocumentSnapshot list = await userCartReference.get();
+    var map = await list.get("productList") as Map<String, dynamic>;
+    var a = map["sum"];
+    return a;
   }
 
   Future increment(ProductModel product) async {
@@ -57,6 +77,7 @@ class DatabaseService {
     }
 
     await userCartReference.set({"productList": arr});
+    updateSum();
   }
 
   Future decrement(ProductModel product) async {
@@ -76,12 +97,14 @@ class DatabaseService {
     }
 
     await userCartReference.set({"productList": arr});
+    updateSum();
   }
 
   Future removeProduct(ProductModel product) async {
     userCartReference.set({
       "productList": FieldValue.arrayRemove([product.toJson()]),
     }, SetOptions(merge: true));
+    updateSum();
   }
 
   Future clearCart() async {
