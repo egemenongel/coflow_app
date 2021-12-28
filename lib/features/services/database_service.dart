@@ -50,6 +50,7 @@ class DatabaseService {
         },
       );
     }
+    await updateSum();
   }
 
   Future updateSum() async {
@@ -80,7 +81,7 @@ class DatabaseService {
     }
 
     await userCartReference.set({"productList": arr});
-    updateSum();
+    await updateSum();
   }
 
   Future decrement(ProductModel product) async {
@@ -100,17 +101,19 @@ class DatabaseService {
     }
 
     await userCartReference.set({"productList": arr});
-    updateSum();
+    await updateSum();
   }
 
   Future removeProduct(ProductModel product) async {
-    userCartReference.set({
-      "productList": FieldValue.arrayRemove([product.toJson()]),
-    }, SetOptions(merge: true));
-    updateSum();
+    userCartReference.update(
+      {
+        "productList": FieldValue.arrayRemove([product.toJson()]),
+      },
+    );
+    await updateSum();
   }
 
   Future clearCart() async {
-    userCartReference.update({"productList": FieldValue.delete()});
+    userCartReference.update({"productList": []});
   }
 }
